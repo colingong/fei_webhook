@@ -25,7 +25,7 @@ SECRET_KEY = 'd$exn_q$f$v$an(2%o-8n=8+zc!f&id3hqx@$oxu##qfw!_*!6'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*", ]
 
 
 # Application definition
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'github_webhook',
 ]
 
 MIDDLEWARE = [
