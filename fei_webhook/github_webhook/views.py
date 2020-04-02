@@ -7,7 +7,6 @@ def alive(request):
     return HttpResponse('alive\n')
 
 # dummy
-
 @csrf_exempt
 def webhook(request):
     if request.method == 'POST':
