@@ -11,7 +11,7 @@ def alive(request):
 @csrf_exempt
 def webhook(request):
     if request.method == 'POST':
-        for k, _ in request.POST:
+        for k, _ in request.POST.items():
             print(f'key ---> {k}')
         print(request.POST.get('ref'))
         print(request.POST.get('before'))
