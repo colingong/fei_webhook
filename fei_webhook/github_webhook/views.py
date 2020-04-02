@@ -11,9 +11,9 @@ def alive(request):
 def webhook(request):
     if request.method == 'POST':
         data = json.loads(request.body)
-        print(data.get('ref'))
-        print(data.get('before'))
-        print(data.get('after'))
+        print(f'ref    :  {data.get("ref")}')
+        print(f'before :  {data.get("before")}')
+        print(f'after  :  {data.get("after")}')
         log_event(request.body.decode('utf-8'))
         return HttpResponse('ok')
 
