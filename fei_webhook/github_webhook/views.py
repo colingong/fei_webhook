@@ -10,9 +10,10 @@ def alive(request):
 @csrf_exempt
 def webhook(request):
     if request.method == 'POST':
+        request_post_dict = request.POST.dict()
         log_event(request.body.decode('utf-8'))
-        print(request.body.get('before'))
-        print(request.body.get('after'))
+        print(request_post_dict.get('before'))
+        print(request_post_dict.get('after'))
         return HttpResponse('ok')
 
     return HttpResponse('not post\n')
