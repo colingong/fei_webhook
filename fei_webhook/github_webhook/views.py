@@ -6,6 +6,7 @@ from share.util_file import log_event
 def alive(request):
     return HttpResponse('alive\n')
 
+# dummy
 
 @csrf_exempt
 def webhook(request):
