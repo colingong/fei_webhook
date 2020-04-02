@@ -12,6 +12,8 @@ def alive(request):
 def webhook(request):
     if request.method == 'POST':
         log_event(request.body.decode('utf-8'))
+        for k, _ in request.POST:
+            print(f'key ---> {k}')
         print(request.POST.get('ref'))
         print(request.POST.get('before'))
         print(request.POST.get('after'))
