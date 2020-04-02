@@ -10,7 +10,8 @@ def alive(request):
 def webhook(request):
     if request.method == 'POST':
         log_event(request.body.decode('utf-8'))
-        print(request.POST['before'])
+        print(request.POST.get('ref'))
+        print(request.POST.get('before'))
         print(request.POST.get('after'))
         return HttpResponse('ok')
 
