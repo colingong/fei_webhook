@@ -17,8 +17,8 @@ def webhook(request):
         print(request.headers.get('X-Hub-Signature'))
 
         # payload caculate
-        payload = request.body.decode('utf-8')
-        signature = hashlib.sha1(payload).digest()
+        # payload = request.body.decode('utf-8')
+        signature = hashlib.sha1(request.body).digest()
         print(f'check sign: {signature}')
         log_event(request.body.decode('utf-8'))
 
