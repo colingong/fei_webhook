@@ -2,6 +2,7 @@ from django.shortcuts import render, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from share.util_file import log_event
 import json
+import hashlib
 
 # Create your views here.
 @csrf_exempt
@@ -13,6 +14,11 @@ def webhook(request):
         data = json.loads(request.body)
         print(f'ref: {data.get("ref")} *** before: {data.get("before")} *** after: {data.get("after")}')
         print(request.headers.get('X-Hub-Signature'))
+
+        # payload caculate
+        payload = request.body.decode('utf-8')
+        signature = hashlib.sha1(payload).digest()
+        print(f'check sign: {signature}')
         log_event(request.body.decode('utf-8'))
 
         # TODO: 如果是form
