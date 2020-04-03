@@ -36,7 +36,7 @@ def webhook(request):
         # "repository":{"hooks_url": ...}
         hooks_url = 
 
-        # commits: {"message": ...}
+        # "head_commit": {"message": ...}
         commit_msg
         """
         github_log = GithubLog()
