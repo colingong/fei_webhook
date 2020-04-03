@@ -7,7 +7,6 @@ import json
 @csrf_exempt
 def webhook(request):
     if request.method == 'POST':
-
         # 注意github配置时，选择的是form还是json
 
         # 如果是json
