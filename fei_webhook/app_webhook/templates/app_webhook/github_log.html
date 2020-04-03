@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="alert alert-primary border">
+    
+    {% for log in logs %}
+        <table class="border">
+        <tr><td>date</td><td>{{ log.date }}</td></tr>
+        <tr><td>time</td><td>{{ log.time }}</td></tr>
+        <tr><td>ref</td><td>{{ log.ref }}</td></tr>
+        <tr><td>commit_msg</td><td>{{ log.commit_message }}</td></tr>
+        <tr><td>before</td><td>{{ log.before }}</td></tr>
+        <tr><td>after</td><td>{{ log.after }}</td></tr>
+        <tr><td>repo_name</td><td>{{ log.repo_name }}</td></tr>
+        <tr><td>html_url</td><td>{{ log.html_url }}</td></tr>
+        <tr><td>hooks_url</td><td>{{ log.hooks_url }}</td></tr>
+    </table>
+    <hr>
+        {% endfor %}
+
+</div>
+{% endblock content %}
