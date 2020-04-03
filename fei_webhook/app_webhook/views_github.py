@@ -15,6 +15,7 @@ def webhook(request):
         print(f'ref    :  {data.get("ref")}')
         print(f'before :  {data.get("before")}')
         print(f'after  :  {data.get("after")}')
+        print(request.headers.get('X-Hub-Signature'))
         log_event(request.body.decode('utf-8'))
 
         # TODO: 如果是form
