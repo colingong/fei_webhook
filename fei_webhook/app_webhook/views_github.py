@@ -4,7 +4,6 @@ from share.util_file import log_event
 import json
 
 # Create your views here.
-
 @csrf_exempt
 def webhook(request):
     if request.method == 'POST':
