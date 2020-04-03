@@ -17,7 +17,7 @@ def webhook(request):
 
         # payload caculate
         # payload = request.body.decode('utf-8')
-        signature = hashlib.sha1(request.body).digest()
+        signature = hashlib.sha1(request.body).hexdigest()
         print(f'check sign: {signature}')
         log_event(request.body.decode('utf-8'))
 
