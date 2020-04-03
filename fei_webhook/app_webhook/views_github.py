@@ -12,9 +12,7 @@ def webhook(request):
 
         # 如果是json
         data = json.loads(request.body)
-        print(f'ref    :  {data.get("ref")}')
-        print(f'before :  {data.get("before")}')
-        print(f'after  :  {data.get("after")}')
+        print(f'ref: {data.get("ref")} *** before: {data.get("before")} *** after: {data.get("after")}')
         print(request.headers.get('X-Hub-Signature'))
         log_event(request.body.decode('utf-8'))
 
