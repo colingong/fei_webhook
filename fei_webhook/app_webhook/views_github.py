@@ -4,9 +4,6 @@ from share.util_file import log_event
 import json
 
 # Create your views here.
-def alive(request):
-    return HttpResponse('alive\n')
-
 
 @csrf_exempt
 def webhook(request):
