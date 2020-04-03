@@ -23,7 +23,7 @@ def webhook(request):
         raw = request.body
         key = '123456'.encode('utf-8')
         hashed = hmac.new(key, raw, hashlib.sha1)
-        sign = base64.encodebytes(hashed.digest()).decode('utf-8')
+        sign = hashed.hexdigest()
         print(f'check sign: {sign}')
 
         log_event(request.body.decode('utf-8'))
