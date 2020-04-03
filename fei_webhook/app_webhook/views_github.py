@@ -5,6 +5,7 @@ import json
 import hashlib, hmac, base64
 
 # Create your views here.
+
 @csrf_exempt
 def webhook(request):
     if request.method == 'POST':
