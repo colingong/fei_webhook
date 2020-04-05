@@ -10,8 +10,8 @@
         <tr><td>time</td><td>{{ log.time }}</td></tr>
         <tr><td>ref</td><td>{{ log.ref }}</td></tr>
         <tr><td>commit_msg</td><td>{{ log.commit_message }}</td></tr>
-        <tr><td>before</td><td>{{ log.before | slice:":6" }}</td></tr>
         <tr><td>after</td><td>{{ log.after | slice:":6" }}</td></tr>
+        <tr><td>before</td><td>{{ log.before | slice:":6" }}</td></tr>
         <tr><td>repo_name</td><td>{{ log.repo_name }}</td></tr>
         <tr><td>html_url</td><td>{{ log.html_url }}</td></tr>
     </table>
