@@ -72,3 +72,4 @@ def list_githublog(request, count=5):
         return render(request, 'app_webhook/github_log.html', {'logs': logs})
 
     return HttpResponse("no ok")
+    
