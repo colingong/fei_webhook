@@ -8,16 +8,8 @@ class Cmds(object):
     def __init__(self, cmds):
         self.cmds = cmds
         self.repos_parent_dir = REPOS_PARENT_DIR
-
-    # def combine_cmds(self):
-    #     if len(cmds) > 1:
-    #         combined_cmd = ' && '.join(self.cmds)
     
     def run(self):
-        # result = ''
-        # output = subprocess.check_call(self.cmds)
-        # result = output
-        # return result
         process = Popen('bash', shell=False, universal_newlines=True,
         stdin=PIPE, stdout=PIPE, stderr=PIPE)
         for cmd in self.cmds:
