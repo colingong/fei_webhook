@@ -6,6 +6,7 @@ import hashlib, hmac, base64
 import os
 from main_settings.settings import BASE_DIR
 from .models import WebhookLog
+from .shell_cmd import Cmds
 
 # Create your views here.
 
@@ -60,6 +61,12 @@ def github_hook(request):
 
         log_event(request.body.decode('utf-8'), GITHUB_LOGFILE)
 
+        excute_cmds = ['pwd',
+        'ls -l']
+
+        c = Cmds(excute_cmds)
+        print(f'REPOS PARENT DIR: ---> {c.repos_parent_dir}')
+        
         # TODO: 如果是form
         
         return HttpResponse('ok')
@@ -72,4 +79,3 @@ def list_githublog(request, count=5):
         return render(request, 'app_webhook/github_log.html', {'logs': logs})
 
     return HttpResponse("no ok")
-    
