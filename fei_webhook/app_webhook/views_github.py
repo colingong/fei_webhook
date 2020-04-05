@@ -61,8 +61,10 @@ def github_hook(request):
 
         log_event(request.body.decode('utf-8'), GITHUB_LOGFILE)
 
-        excute_cmds = ['pwd',
-        'ls -l']
+        excute_cmds = [
+            'pwd',
+            'ls -l',
+            ]
 
         c = Cmds(excute_cmds)
         print(f'REPOS PARENT DIR: ---> {c.repos_parent_dir}')
