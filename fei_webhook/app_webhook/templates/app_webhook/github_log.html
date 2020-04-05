@@ -5,6 +5,7 @@
     
     {% for log in logs %}
         <table class="border">
+        <tr><td>from</td><td>{{ log.from_site }}</td></tr>
         <tr><td>date</td><td>{{ log.date }}</td></tr>
         <tr><td>time</td><td>{{ log.time }}</td></tr>
         <tr><td>ref</td><td>{{ log.ref }}</td></tr>

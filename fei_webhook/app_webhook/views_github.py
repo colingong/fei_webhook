@@ -39,7 +39,7 @@ def github_hook(request):
         # "head_commit": {"message": ...}
         commit_msg
         """
-        github_log = WebhookLog()
+        github_log = WebhookLog(from_site="Github.com")
         github_log.ref = data.get("ref")
         github_log.before = data.get("before")
         github_log.after = data.get("after")
