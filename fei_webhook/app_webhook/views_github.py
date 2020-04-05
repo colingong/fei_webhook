@@ -50,7 +50,6 @@ def github_hook(request):
         github_log.commit_message = head_commit.get("message")
         github_log.save()
         # print(f'ref: {data.get("ref")} *** before: {data.get("before")} *** after: {data.get("after")}')
-        
 
         print(request.headers.get('X-Hub-Signature'))
         raw = request.body
