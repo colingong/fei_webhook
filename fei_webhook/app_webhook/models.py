@@ -18,7 +18,9 @@ from django.db import models
 
 # Create your models here.
 
-class GithubLog(models.Model):
+class WebhookLog(models.Model):
+    from_site = models.CharField(max_length=200)
+    request_url = models.URLField(max_length=1000)
     date = models.DateField(auto_now_add=True)
     time = models.TimeField(auto_now_add=True)
     ref = models.CharField(max_length=200, blank=True)
@@ -36,6 +38,9 @@ class GithubLog(models.Model):
 
     # commits: {message: ... }
     commit_message = models.CharField(max_length=1000, blank=True)
+
+    # to log some extra info
+    extra_info = models.CharField(max_length=250, blank=True)
     
     def __str__(self):
         return self.repo_name

@@ -5,7 +5,7 @@ import json
 import hashlib, hmac, base64
 import os
 from main_settings.settings import BASE_DIR
-from .models import GithubLog
+from .models import WebhookLog
 
 # Create your views here.
 
@@ -13,7 +13,7 @@ FILENAME = 'github_webhook.log'
 GITHUB_LOGFILE = os.path.join(BASE_DIR, 'log', FILENAME)
 
 @csrf_exempt
-def webhook(request):
+def github_hook(request):
     if request.method == 'POST':
         # 注意github配置时，选择的是form还是json
 
@@ -39,7 +39,7 @@ def webhook(request):
         # "head_commit": {"message": ...}
         commit_msg
         """
-        github_log = GithubLog()
+        github_log = WebhookLog()
         github_log.ref = data.get("ref")
         github_log.before = data.get("before")
         github_log.after = data.get("after")
@@ -50,7 +50,7 @@ def webhook(request):
         github_log.save()
         # print(f'ref: {data.get("ref")} *** before: {data.get("before")} *** after: {data.get("after")}')
         
-        
+
         print(request.headers.get('X-Hub-Signature'))
         raw = request.body
         key = '123456'.encode('utf-8')
@@ -68,7 +68,7 @@ def webhook(request):
 
 def list_githublog(request, count=5):
     if request.method == 'GET':
-        logs = GithubLog.objects.all().order_by('-id')[:count]
+        logs = WebhookLog.objects.all().order_by('-id')[:count]
         return render(request, 'app_webhook/github_log.html', {'logs': logs})
 
     return HttpResponse("no ok")
