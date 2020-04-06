@@ -2,8 +2,11 @@
 from django.urls import path, include
 from . import views
 from . import views_github
+from . import views_hhxx
+
 urlpatterns = [
     path('', views.alive, name='alive'),
     path('github/', views_github.github_hook, name='webhook-github'),
     path('github/logs/<int:count>/', views_github.list_githublog, name='listlogs-github'),
+    path('hhxx/', views_hhxx.hhxx_hook, name='webhook-hhxx'),
 ]

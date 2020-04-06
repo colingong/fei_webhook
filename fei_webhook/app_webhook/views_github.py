@@ -7,6 +7,10 @@ import os
 from main_settings.settings import BASE_DIR
 from .models import WebhookLog
 from .shell_cmd import Cmds
+from .hook import GithubHook
+from main_settings.settings import BASE_DIR
+import pathlib
+from share.env_conf import WebhookConfig
 
 # Create your views here.
 
@@ -19,56 +23,18 @@ def github_hook(request):
         # 注意github配置时，选择的是form还是json
 
         # 如果是json
-        data = json.loads(request.body)
-        repository = data.get("repository")
-        head_commit = data.get("head_commit")
+        log = GithubHook(request, sec_code=WebhookConfig.github_sec_code)
+        
+        filename = 'demo_script.sh'
+        dirname = pathlib.Path(BASE_DIR).parent
+        # log.shell_script = os.path.join(dirname, filename)
+        log.shell_script = WebhookConfig.github_hook_script
+        print(f'script file ---> {log.shell_script}')
 
-        """
-        ref =
-        before = 
-        after = 
-
-        # "repository":{"full_name": ...}
-        repo_name = 
-
-        # "repository":{"html_url": ...}
-        html_url = 
-
-        # "repository":{"hooks_url": ...}
-        hooks_url = 
-
-        # "head_commit": {"message": ...}
-        commit_msg
-        """
-        github_log = WebhookLog()
-        github_log.from_site = 'Github.com'
-        github_log.ref = data.get("ref")
-        github_log.before = data.get("before")
-        github_log.after = data.get("after")
-        github_log.repo_name = repository.get("full_name")
-        github_log.html_url = repository.get("html_url")
-        github_log.hooks_url = repository.get("hooks_url")
-        github_log.commit_message = head_commit.get("message")
-        github_log.save()
-        # print(f'ref: {data.get("ref")} *** before: {data.get("before")} *** after: {data.get("after")}')
-
-        print(request.headers.get('X-Hub-Signature'))
-        raw = request.body
-        key = '123456'.encode('utf-8')
-        hashed = hmac.new(key, raw, hashlib.sha1)
-        sign = hashed.hexdigest()
-        print(f'check sign: {sign}')
-
-        log_event(request.body.decode('utf-8'), GITHUB_LOGFILE)
-
-        excute_cmds = [
-            'pwd',
-            'ls -l',
-            ]
+        log.save_log()
+        print(f'verified ---> {log.verified}')
         
         # dummy commit
-        c = Cmds(excute_cmds)
-        print(f'REPOS PARENT DIR: ---> {c.repos_parent_dir}')
         
         # TODO: 如果是form
         
