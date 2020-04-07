@@ -202,11 +202,13 @@ import json
 # payload = json.dumps(github_data).encode('utf-8')
 # payload = json.dumps(github_data)
 
-payload = github_data
+data_dict = json.loads(github_data)
+payload = json.dumps(data_dict).encode('utf-8')
+print(payload)
 
 def func1():
-    key = b'123456'
-    raw = json.dumps(payload).encode('utf-8')
+    key = '123456'.encode('utf-8')
+    raw = payload
     # print(raw)
     sign = hmac.new(key, raw, hashlib.sha1).hexdigest()
     print(sign, github_sign)
@@ -222,6 +224,6 @@ def func2():
     print(f'bytes ---> {bb}')
 
 if __name__ == '__main__':
-    # func1()
-    func2()
+    func1()
+    # func2()
 
