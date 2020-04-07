@@ -101,7 +101,7 @@ class GithubHook(WebHook):
         sign_from_github = self.request.headers.get('X-Hub-Signature')
         raw = self.request.body
         key = self.sec_code.encode('utf-8')
-        print(f'key ---> {key}')
+        print(f'key: ---> {self.sec_code} / bytes key ---> {key}')
         hashed = hmac.new(key, raw, hashlib.sha1)
         sign = hashed.hexdigest()
         print(f'github sign: {sign_from_github} / local check sign: {sign}')
