@@ -1,0 +1,333 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>app_webhook.hook &mdash; A webhook demo v.01 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script src="../../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> A webhook demo
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../create_md/a-webhook-app-demo.html">一个用django开发的webhook应用</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">fei_webhook</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">A webhook demo</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">模块代码</a> &raquo;</li>
+        
+      <li>app_webhook.hook</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>app_webhook.hook 源代码</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;定义hook的执行</span>
+<span class="sd">    WebHook: </span>
+<span class="sd">    def _if_valid_source(self):  </span>
+<span class="sd">    验证是否合法来源的webhook</span>
+<span class="sd">        可以post一个自定义的key，{&quot;sec_code&quot;:&quot;my_password&quot;}，然后验证这个key是否符合</span>
+<span class="sd">        github的webhook按照github的签名方式来计算：header里有一个&#39;X-Hub-Signature&#39;，</span>
+<span class="sd">        然后对payload用预先在github上预留的code进行签名，二者相符则签名通过</span>
+
+<span class="sd">        自定义的webhook，就直接在post发送的json里加一个{&quot;sec_code&quot;:&quot;...&quot;}来验证</span>
+<span class="sd">    def set_fields(self):</span>
+<span class="sd">    设定需要写入的字段，根据webhook的来源不同，这里写入的数据由自已定义并处理</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">share.env_conf</span> <span class="kn">import</span> <span class="n">WebhookConfig</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">WebhookLog</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">import</span> <span class="nn">hmac</span><span class="o">,</span> <span class="nn">hashlib</span>
+
+<div class="viewcode-block" id="WebhookSourceNotValid"><a class="viewcode-back" href="../../api/app_webhook.html#app_webhook.hook.WebhookSourceNotValid">[文档]</a><span class="k">class</span> <span class="nc">WebhookSourceNotValid</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="WebHook"><a class="viewcode-back" href="../../api/app_webhook.html#app_webhook.hook.WebHook">[文档]</a><span class="k">class</span> <span class="nc">WebHook</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;接受一个请求，然后将必须的几个属性赋值</span>
+<span class="sd">    log = WebHook()</span>
+<span class="sd">    &lt;...验证是否允许的来源...&gt; self.verified = True</span>
+<span class="sd">    log.set_log_fields()                从self.data_dict里取值</span>
+<span class="sd">    log.from_site = ...                 无法set_log_fields的项，手动赋值一遍</span>
+<span class="sd">    log.shell_script = &#39;&lt;执行的命令&gt;&#39;</span>
+<span class="sd">    log.save_log() :这样就执行脚本并且保存日志</span>
+<span class="sd">    必须的属性包括：</span>
+<span class="sd">       from_site: 需要知道这个请求来自于何处</span>
+<span class="sd">       shell_script: 需要知道收到请求后去执行哪个脚本</span>
+<span class="sd">       verified: 需要先赋值为True才会保存；验证需要自行处理，因为每个webhook的验证方式不一样</span>
+<span class="sd">                 可以考虑post过来的json包括一个{&quot;sec&quot;: sec_code}，然后每次验证它</span>
+<span class="sd">    </span>
+<span class="sd">    Arguments:</span>
+<span class="sd">        object {[type]} -- [description]</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        [type] -- [description]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">sec_code</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sec_code</span> <span class="o">=</span> <span class="n">sec_code</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">request</span> <span class="o">=</span> <span class="n">request</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shell_script</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_data_to_dict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">webhooklog</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gen_webhooklog</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_empty_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;no_key&quot;</span><span class="p">:</span> <span class="s2">&quot;no_value&quot;</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verified</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_if_valid_source</span><span class="p">()</span>
+    
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">_if_valid_source</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;需要实现验证，确认是否合法来源&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="WebHook.set_fields"><a class="viewcode-back" href="../../api/app_webhook.html#app_webhook.hook.WebHook.set_fields">[文档]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">set_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;需要给webhooklog的字段赋值&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="WebHook.convert_data_to_dict"><a class="viewcode-back" href="../../api/app_webhook.html#app_webhook.hook.WebHook.convert_data_to_dict">[文档]</a>    <span class="k">def</span> <span class="nf">convert_data_to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;处理get或post请求，获取有用的数据&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;GET&#39;</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">data</span></div>
+    
+<div class="viewcode-block" id="WebHook.gen_webhooklog"><a class="viewcode-back" href="../../api/app_webhook.html#app_webhook.hook.WebHook.gen_webhooklog">[文档]</a>    <span class="k">def</span> <span class="nf">gen_webhooklog</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;获取日志各字段的值&quot;&quot;&quot;</span>
+
+        <span class="n">webhooklog</span> <span class="o">=</span> <span class="n">WebhookLog</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">webhooklog</span></div>
+
+<div class="viewcode-block" id="WebHook.save_log"><a class="viewcode-back" href="../../api/app_webhook.html#app_webhook.hook.WebHook.save_log">[文档]</a>    <span class="k">def</span> <span class="nf">save_log</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;verified ===&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">verified</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verified</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_fields</span><span class="p">()</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_shell_script</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">webhooklog</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">output</span>
+
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+    <span class="k">def</span> <span class="nf">_run_shell_script</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">shell_script</span><span class="p">,</span> <span class="p">])</span>
+            <span class="k">return</span> <span class="n">output</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;script run error ---&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">shell_script</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GithubHook"><a class="viewcode-back" href="../../api/app_webhook.html#app_webhook.hook.GithubHook">[文档]</a><span class="k">class</span> <span class="nc">GithubHook</span><span class="p">(</span><span class="n">WebHook</span><span class="p">):</span>
+
+<div class="viewcode-block" id="GithubHook.set_fields"><a class="viewcode-back" href="../../api/app_webhook.html#app_webhook.hook.GithubHook.set_fields">[文档]</a>    <span class="k">def</span> <span class="nf">set_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">webhooklog</span><span class="o">.</span><span class="n">from_site</span> <span class="o">=</span> <span class="s1">&#39;Github.com&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">webhooklog</span><span class="o">.</span><span class="n">ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ref&quot;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">webhooklog</span><span class="o">.</span><span class="n">before</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;before&quot;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">webhooklog</span><span class="o">.</span><span class="n">after</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;after&quot;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">repository</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;repository&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_empty_dict</span><span class="p">)</span>
+        <span class="n">head_commit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;head_commit&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_empty_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">webhooklog</span><span class="o">.</span><span class="n">repo_name</span> <span class="o">=</span> <span class="n">repository</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;full_name&quot;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">webhooklog</span><span class="o">.</span><span class="n">html_url</span> <span class="o">=</span> <span class="n">repository</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;html_url&quot;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">webhooklog</span><span class="o">.</span><span class="n">hooks_url</span> <span class="o">=</span> <span class="n">repository</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;hooks_url&quot;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">webhooklog</span><span class="o">.</span><span class="n">commit_message</span> <span class="o">=</span> <span class="n">head_commit</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;message&quot;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;---&gt; set_fields done&#39;</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_if_valid_source</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">sign_from_github</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;X-Hub-Signature&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">raw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">body</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sec_code</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+
+        <span class="n">hashed</span> <span class="o">=</span> <span class="n">hmac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">raw</span><span class="p">,</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">)</span>
+        <span class="n">sign</span> <span class="o">=</span> <span class="n">hashed</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;github sign: </span><span class="si">{</span><span class="n">sign_from_github</span><span class="si">}</span><span class="s1"> / local check sign: </span><span class="si">{</span><span class="n">sign</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        
+        <span class="c1"># 给测试用的sec_code，从环境变量获取</span>
+        <span class="n">test_sign</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;sec_code&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">sign_from_github</span> <span class="o">==</span> <span class="n">sign</span> <span class="ow">or</span> <span class="n">test_sign</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">sec_code</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="HhxxGitHook"><a class="viewcode-back" href="../../api/app_webhook.html#app_webhook.hook.HhxxGitHook">[文档]</a><span class="k">class</span> <span class="nc">HhxxGitHook</span><span class="p">(</span><span class="n">WebHook</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;用于接受本地git server 在post-receive发过来的请求</span>
+<span class="sd">    curl -H &quot;Content-Type:application/json&quot; -X POST -d &#39;{&quot;sec_code&quot;:&quot;&quot;}&#39; &lt;http://site/...&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="HhxxGitHook.set_fields"><a class="viewcode-back" href="../../api/app_webhook.html#app_webhook.hook.HhxxGitHook.set_fields">[文档]</a>    <span class="k">def</span> <span class="nf">set_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">webhooklog</span><span class="o">.</span><span class="n">from_site</span> <span class="o">=</span> <span class="s2">&quot;hhxx git server&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">webhooklog</span><span class="o">.</span><span class="n">after</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;after&quot;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_if_valid_source</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">my_code</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;sec_code&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">my_code</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">sec_code</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="kc">False</span></div>
+        
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Fei
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

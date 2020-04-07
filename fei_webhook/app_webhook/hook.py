@@ -1,4 +1,16 @@
-"""一个webhook的执行"""
+"""定义hook的执行
+    WebHook: 
+    def _if_valid_source(self):  
+    验证是否合法来源的webhook
+        可以post一个自定义的key，{"sec_code":"my_password"}，然后验证这个key是否符合
+        github的webhook按照github的签名方式来计算：header里有一个'X-Hub-Signature'，
+        然后对payload用预先在github上预留的code进行签名，二者相符则签名通过
+
+        自定义的webhook，就直接在post发送的json里加一个{"sec_code":"..."}来验证
+    def set_fields(self):
+    设定需要写入的字段，根据webhook的来源不同，这里写入的数据由自已定义并处理
+"""
+
 from share.env_conf import WebhookConfig
 from .models import WebhookLog
 import subprocess

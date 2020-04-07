@@ -1,0 +1,239 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>app_webhook.views_github &mdash; A webhook demo v.01 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script src="../../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> A webhook demo
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../create_md/a-webhook-app-demo.html">一个用django开发的webhook应用</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">fei_webhook</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">A webhook demo</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">模块代码</a> &raquo;</li>
+        
+      <li>app_webhook.views_github</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>app_webhook.views_github 源代码</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span><span class="p">,</span> <span class="n">HttpResponse</span>
+<span class="kn">from</span> <span class="nn">django.views.decorators.csrf</span> <span class="kn">import</span> <span class="n">csrf_exempt</span>
+<span class="kn">from</span> <span class="nn">share.util_file</span> <span class="kn">import</span> <span class="n">log_event</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">hashlib</span><span class="o">,</span> <span class="nn">hmac</span><span class="o">,</span> <span class="nn">base64</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">main_settings.settings</span> <span class="kn">import</span> <span class="n">BASE_DIR</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">WebhookLog</span>
+<span class="kn">from</span> <span class="nn">.shell_cmd</span> <span class="kn">import</span> <span class="n">Cmds</span>
+<span class="kn">from</span> <span class="nn">.hook</span> <span class="kn">import</span> <span class="n">GithubHook</span>
+<span class="kn">from</span> <span class="nn">main_settings.settings</span> <span class="kn">import</span> <span class="n">BASE_DIR</span>
+<span class="kn">import</span> <span class="nn">pathlib</span>
+<span class="kn">from</span> <span class="nn">share.env_conf</span> <span class="kn">import</span> <span class="n">WebhookConfig</span>
+
+<span class="c1"># Create your views here.</span>
+
+<span class="n">FILENAME</span> <span class="o">=</span> <span class="s1">&#39;github_webhook.log&#39;</span>
+<span class="n">GITHUB_LOGFILE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">BASE_DIR</span><span class="p">,</span> <span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">FILENAME</span><span class="p">)</span>
+
+<div class="viewcode-block" id="github_hook"><a class="viewcode-back" href="../../api/app_webhook.html#app_webhook.views_github.github_hook">[文档]</a><span class="nd">@csrf_exempt</span>
+<span class="k">def</span> <span class="nf">github_hook</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
+        <span class="c1"># 注意github配置时，选择的是form还是json</span>
+
+        <span class="c1"># 如果是json</span>
+        <span class="n">log</span> <span class="o">=</span> <span class="n">GithubHook</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">sec_code</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">WebhookConfig</span><span class="o">.</span><span class="n">github_sec_code</span><span class="p">))</span>
+        
+        <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;demo_script.sh&#39;</span>
+        <span class="n">dirname</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">BASE_DIR</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span>
+        <span class="c1"># log.shell_script = os.path.join(dirname, filename)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">shell_script</span> <span class="o">=</span> <span class="n">WebhookConfig</span><span class="o">.</span><span class="n">github_hook_script</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;script file ---&gt; </span><span class="si">{</span><span class="n">log</span><span class="o">.</span><span class="n">shell_script</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">save_log</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;verified ---&gt; </span><span class="si">{</span><span class="n">log</span><span class="o">.</span><span class="n">verified</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="c1"># dummy commit</span>
+        
+        <span class="c1"># TODO: 如果是form</span>
+        
+        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s1">&#39;ok&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s1">&#39;not post</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="list_githublog"><a class="viewcode-back" href="../../api/app_webhook.html#app_webhook.views_github.list_githublog">[文档]</a><span class="k">def</span> <span class="nf">list_githublog</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;GET&#39;</span><span class="p">:</span>
+        <span class="n">logs</span> <span class="o">=</span> <span class="n">WebhookLog</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-id&#39;</span><span class="p">)[:</span><span class="n">count</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;app_webhook/github_log.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;logs&#39;</span><span class="p">:</span> <span class="n">logs</span><span class="p">})</span>
+
+    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s2">&quot;no ok&quot;</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Fei
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

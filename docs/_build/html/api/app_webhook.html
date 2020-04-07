@@ -1,0 +1,563 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>app_webhook package &mdash; A webhook demo v.01 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="app_webhook.migrations package" href="app_webhook.migrations.html" />
+    <link rel="prev" title="fei_webhook" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> A webhook demo
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../create_md/a-webhook-app-demo.html">一个用django开发的webhook应用</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">fei_webhook</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">app_webhook package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="app_webhook.migrations.html">app_webhook.migrations package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-app_webhook.admin">app_webhook.admin module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-app_webhook.apps">app_webhook.apps module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-app_webhook.hook">app_webhook.hook module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-app_webhook.models">app_webhook.models module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-app_webhook.shell_cmd">app_webhook.shell_cmd module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-app_webhook.tests">app_webhook.tests module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-app_webhook.urls">app_webhook.urls module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-app_webhook.views">app_webhook.views module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-app_webhook.views_github">app_webhook.views_github module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-app_webhook.views_hhxx">app_webhook.views_hhxx module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-app_webhook">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="main_settings.html">main_settings package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="manage.html">manage module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="share.html">share package</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">A webhook demo</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="modules.html">fei_webhook</a> &raquo;</li>
+        
+      <li>app_webhook package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/app_webhook.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="app-webhook-package">
+<h1>app_webhook package<a class="headerlink" href="#app-webhook-package" title="永久链接至标题">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="永久链接至标题">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="app_webhook.migrations.html">app_webhook.migrations package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="app_webhook.migrations.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="app_webhook.migrations.html#module-app_webhook.migrations.0001_initial">app_webhook.migrations.0001_initial module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="app_webhook.migrations.html#module-app_webhook.migrations.0002_auto_20200403_2357">app_webhook.migrations.0002_auto_20200403_2357 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="app_webhook.migrations.html#module-app_webhook.migrations.0003_githublog_commit_message">app_webhook.migrations.0003_githublog_commit_message module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="app_webhook.migrations.html#module-app_webhook.migrations.0004_auto_20200405_1944">app_webhook.migrations.0004_auto_20200405_1944 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="app_webhook.migrations.html#module-app_webhook.migrations">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="永久链接至标题">¶</a></h2>
+</div>
+<div class="section" id="module-app_webhook.admin">
+<span id="app-webhook-admin-module"></span><h2>app_webhook.admin module<a class="headerlink" href="#module-app_webhook.admin" title="永久链接至标题">¶</a></h2>
+</div>
+<div class="section" id="module-app_webhook.apps">
+<span id="app-webhook-apps-module"></span><h2>app_webhook.apps module<a class="headerlink" href="#module-app_webhook.apps" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="app_webhook.apps.AppWebhookConfig">
+<em class="property">class </em><code class="sig-prename descclassname">app_webhook.apps.</code><code class="sig-name descname">AppWebhookConfig</code><span class="sig-paren">(</span><em class="sig-param">app_name</em>, <em class="sig-param">app_module</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app_webhook/apps.html#AppWebhookConfig"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#app_webhook.apps.AppWebhookConfig" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">django.apps.config.AppConfig</span></code></p>
+<dl class="attribute">
+<dt id="app_webhook.apps.AppWebhookConfig.name">
+<code class="sig-name descname">name</code><em class="property"> = 'app_webhook'</em><a class="headerlink" href="#app_webhook.apps.AppWebhookConfig.name" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-app_webhook.hook">
+<span id="app-webhook-hook-module"></span><h2>app_webhook.hook module<a class="headerlink" href="#module-app_webhook.hook" title="永久链接至标题">¶</a></h2>
+<p>定义hook的执行
+WebHook:
+def _if_valid_source(self):
+验证是否合法来源的webhook</p>
+<blockquote>
+<div><p>可以post一个自定义的key，{“sec_code”:”my_password”}，然后验证这个key是否符合
+github的webhook按照github的签名方式来计算：header里有一个’X-Hub-Signature’，
+然后对payload用预先在github上预留的code进行签名，二者相符则签名通过</p>
+<p>自定义的webhook，就直接在post发送的json里加一个{“sec_code”:”…”}来验证</p>
+</div></blockquote>
+<p>def set_fields(self):
+设定需要写入的字段，根据webhook的来源不同，这里写入的数据由自已定义并处理</p>
+<dl class="class">
+<dt id="app_webhook.hook.GithubHook">
+<em class="property">class </em><code class="sig-prename descclassname">app_webhook.hook.</code><code class="sig-name descname">GithubHook</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">sec_code=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app_webhook/hook.html#GithubHook"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#app_webhook.hook.GithubHook" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference internal" href="#app_webhook.hook.WebHook" title="app_webhook.hook.WebHook"><code class="xref py py-class docutils literal notranslate"><span class="pre">app_webhook.hook.WebHook</span></code></a></p>
+<dl class="method">
+<dt id="app_webhook.hook.GithubHook.set_fields">
+<code class="sig-name descname">set_fields</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app_webhook/hook.html#GithubHook.set_fields"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#app_webhook.hook.GithubHook.set_fields" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="app_webhook.hook.HhxxGitHook">
+<em class="property">class </em><code class="sig-prename descclassname">app_webhook.hook.</code><code class="sig-name descname">HhxxGitHook</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">sec_code=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app_webhook/hook.html#HhxxGitHook"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#app_webhook.hook.HhxxGitHook" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference internal" href="#app_webhook.hook.WebHook" title="app_webhook.hook.WebHook"><code class="xref py py-class docutils literal notranslate"><span class="pre">app_webhook.hook.WebHook</span></code></a></p>
+<p>用于接受本地git server 在post-receive发过来的请求
+curl -H “Content-Type:application/json” -X POST -d ‘{“sec_code”:””}’ &lt;http://site/…&gt;</p>
+<dl class="method">
+<dt id="app_webhook.hook.HhxxGitHook.set_fields">
+<code class="sig-name descname">set_fields</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app_webhook/hook.html#HhxxGitHook.set_fields"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#app_webhook.hook.HhxxGitHook.set_fields" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="app_webhook.hook.WebHook">
+<em class="property">class </em><code class="sig-prename descclassname">app_webhook.hook.</code><code class="sig-name descname">WebHook</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">sec_code=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app_webhook/hook.html#WebHook"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#app_webhook.hook.WebHook" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<p>接受一个请求，然后将必须的几个属性赋值
+log = WebHook()
+&lt;…验证是否允许的来源…&gt; self.verified = True
+log.set_log_fields()                从self.data_dict里取值
+log.from_site = …                 无法set_log_fields的项，手动赋值一遍
+log.shell_script = ‘&lt;执行的命令&gt;’
+log.save_log() :这样就执行脚本并且保存日志
+必须的属性包括：</p>
+<blockquote>
+<div><p>from_site: 需要知道这个请求来自于何处
+shell_script: 需要知道收到请求后去执行哪个脚本
+verified: 需要先赋值为True才会保存；验证需要自行处理，因为每个webhook的验证方式不一样</p>
+<blockquote>
+<div><p>可以考虑post过来的json包括一个{“sec”: sec_code}，然后每次验证它</p>
+</div></blockquote>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">参数</dt>
+<dd class="field-odd"><p><strong>{</strong><strong>[</strong><strong>type</strong><strong>]</strong><strong>} --</strong><strong> [</strong><strong>description</strong><strong>]</strong> (<em>object</em>) – </p>
+</dd>
+<dt class="field-even">返回</dt>
+<dd class="field-even"><p>[type] – [description]</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="app_webhook.hook.WebHook.convert_data_to_dict">
+<code class="sig-name descname">convert_data_to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app_webhook/hook.html#WebHook.convert_data_to_dict"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#app_webhook.hook.WebHook.convert_data_to_dict" title="永久链接至目标">¶</a></dt>
+<dd><p>处理get或post请求，获取有用的数据</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="app_webhook.hook.WebHook.gen_webhooklog">
+<code class="sig-name descname">gen_webhooklog</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app_webhook/hook.html#WebHook.gen_webhooklog"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#app_webhook.hook.WebHook.gen_webhooklog" title="永久链接至目标">¶</a></dt>
+<dd><p>获取日志各字段的值</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="app_webhook.hook.WebHook.save_log">
+<code class="sig-name descname">save_log</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app_webhook/hook.html#WebHook.save_log"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#app_webhook.hook.WebHook.save_log" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="app_webhook.hook.WebHook.set_fields">
+<em class="property">abstract </em><code class="sig-name descname">set_fields</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app_webhook/hook.html#WebHook.set_fields"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#app_webhook.hook.WebHook.set_fields" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="app_webhook.hook.WebhookSourceNotValid">
+<em class="property">exception </em><code class="sig-prename descclassname">app_webhook.hook.</code><code class="sig-name descname">WebhookSourceNotValid</code><a class="reference internal" href="../_modules/app_webhook/hook.html#WebhookSourceNotValid"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#app_webhook.hook.WebhookSourceNotValid" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-app_webhook.models">
+<span id="app-webhook-models-module"></span><h2>app_webhook.models module<a class="headerlink" href="#module-app_webhook.models" title="永久链接至标题">¶</a></h2>
+<p>GithubLog: 记录github的webhook
+# 都是github webhook里的数据
+ref =
+before =
+after =</p>
+<p># “repository”:{“full_name”: …}
+repo_name =</p>
+<p># “repository”:{“html_url”: …}
+html_url =</p>
+<p># “repository”:{“hooks_url”: …}
+hooks_url =</p>
+<dl class="class">
+<dt id="app_webhook.models.WebhookLog">
+<em class="property">class </em><code class="sig-prename descclassname">app_webhook.models.</code><code class="sig-name descname">WebhookLog</code><span class="sig-paren">(</span><em class="sig-param">id</em>, <em class="sig-param">from_site</em>, <em class="sig-param">request_url</em>, <em class="sig-param">date</em>, <em class="sig-param">time</em>, <em class="sig-param">ref</em>, <em class="sig-param">before</em>, <em class="sig-param">after</em>, <em class="sig-param">repo_name</em>, <em class="sig-param">html_url</em>, <em class="sig-param">hooks_url</em>, <em class="sig-param">commit_message</em>, <em class="sig-param">extra_info</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app_webhook/models.html#WebhookLog"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#app_webhook.models.WebhookLog" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">django.db.models.base.Model</span></code></p>
+<dl class="exception">
+<dt id="app_webhook.models.WebhookLog.DoesNotExist">
+<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><a class="headerlink" href="#app_webhook.models.WebhookLog.DoesNotExist" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="app_webhook.models.WebhookLog.MultipleObjectsReturned">
+<em class="property">exception </em><code class="sig-name descname">MultipleObjectsReturned</code><a class="headerlink" href="#app_webhook.models.WebhookLog.MultipleObjectsReturned" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="app_webhook.models.WebhookLog.after">
+<code class="sig-name descname">after</code><a class="headerlink" href="#app_webhook.models.WebhookLog.after" title="永久链接至目标">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="app_webhook.models.WebhookLog.before">
+<code class="sig-name descname">before</code><a class="headerlink" href="#app_webhook.models.WebhookLog.before" title="永久链接至目标">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="app_webhook.models.WebhookLog.commit_message">
+<code class="sig-name descname">commit_message</code><a class="headerlink" href="#app_webhook.models.WebhookLog.commit_message" title="永久链接至目标">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="app_webhook.models.WebhookLog.date">
+<code class="sig-name descname">date</code><a class="headerlink" href="#app_webhook.models.WebhookLog.date" title="永久链接至目标">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="app_webhook.models.WebhookLog.extra_info">
+<code class="sig-name descname">extra_info</code><a class="headerlink" href="#app_webhook.models.WebhookLog.extra_info" title="永久链接至目标">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="app_webhook.models.WebhookLog.from_site">
+<code class="sig-name descname">from_site</code><a class="headerlink" href="#app_webhook.models.WebhookLog.from_site" title="永久链接至目标">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="app_webhook.models.WebhookLog.get_next_by_date">
+<code class="sig-name descname">get_next_by_date</code><span class="sig-paren">(</span><em class="sig-param">*</em>, <em class="sig-param">field=&lt;django.db.models.fields.DateField: date&gt;</em>, <em class="sig-param">is_next=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#app_webhook.models.WebhookLog.get_next_by_date" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="app_webhook.models.WebhookLog.get_previous_by_date">
+<code class="sig-name descname">get_previous_by_date</code><span class="sig-paren">(</span><em class="sig-param">*</em>, <em class="sig-param">field=&lt;django.db.models.fields.DateField: date&gt;</em>, <em class="sig-param">is_next=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#app_webhook.models.WebhookLog.get_previous_by_date" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="app_webhook.models.WebhookLog.hooks_url">
+<code class="sig-name descname">hooks_url</code><a class="headerlink" href="#app_webhook.models.WebhookLog.hooks_url" title="永久链接至目标">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="app_webhook.models.WebhookLog.html_url">
+<code class="sig-name descname">html_url</code><a class="headerlink" href="#app_webhook.models.WebhookLog.html_url" title="永久链接至目标">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="app_webhook.models.WebhookLog.id">
+<code class="sig-name descname">id</code><a class="headerlink" href="#app_webhook.models.WebhookLog.id" title="永久链接至目标">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="app_webhook.models.WebhookLog.objects">
+<code class="sig-name descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#app_webhook.models.WebhookLog.objects" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="app_webhook.models.WebhookLog.ref">
+<code class="sig-name descname">ref</code><a class="headerlink" href="#app_webhook.models.WebhookLog.ref" title="永久链接至目标">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="app_webhook.models.WebhookLog.repo_name">
+<code class="sig-name descname">repo_name</code><a class="headerlink" href="#app_webhook.models.WebhookLog.repo_name" title="永久链接至目标">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="app_webhook.models.WebhookLog.request_url">
+<code class="sig-name descname">request_url</code><a class="headerlink" href="#app_webhook.models.WebhookLog.request_url" title="永久链接至目标">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="app_webhook.models.WebhookLog.time">
+<code class="sig-name descname">time</code><a class="headerlink" href="#app_webhook.models.WebhookLog.time" title="永久链接至目标">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-app_webhook.shell_cmd">
+<span id="app-webhook-shell-cmd-module"></span><h2>app_webhook.shell_cmd module<a class="headerlink" href="#module-app_webhook.shell_cmd" title="永久链接至标题">¶</a></h2>
+<p>执行shell cmd</p>
+<dl class="class">
+<dt id="app_webhook.shell_cmd.Cmds">
+<em class="property">class </em><code class="sig-prename descclassname">app_webhook.shell_cmd.</code><code class="sig-name descname">Cmds</code><span class="sig-paren">(</span><em class="sig-param">cmds</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app_webhook/shell_cmd.html#Cmds"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#app_webhook.shell_cmd.Cmds" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="app_webhook.shell_cmd.Cmds.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app_webhook/shell_cmd.html#Cmds.run"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#app_webhook.shell_cmd.Cmds.run" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-app_webhook.tests">
+<span id="app-webhook-tests-module"></span><h2>app_webhook.tests module<a class="headerlink" href="#module-app_webhook.tests" title="永久链接至标题">¶</a></h2>
+</div>
+<div class="section" id="module-app_webhook.urls">
+<span id="app-webhook-urls-module"></span><h2>app_webhook.urls module<a class="headerlink" href="#module-app_webhook.urls" title="永久链接至标题">¶</a></h2>
+</div>
+<div class="section" id="module-app_webhook.views">
+<span id="app-webhook-views-module"></span><h2>app_webhook.views module<a class="headerlink" href="#module-app_webhook.views" title="永久链接至标题">¶</a></h2>
+<dl class="function">
+<dt id="app_webhook.views.alive">
+<code class="sig-prename descclassname">app_webhook.views.</code><code class="sig-name descname">alive</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app_webhook/views.html#alive"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#app_webhook.views.alive" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-app_webhook.views_github">
+<span id="app-webhook-views-github-module"></span><h2>app_webhook.views_github module<a class="headerlink" href="#module-app_webhook.views_github" title="永久链接至标题">¶</a></h2>
+<dl class="function">
+<dt id="app_webhook.views_github.github_hook">
+<code class="sig-prename descclassname">app_webhook.views_github.</code><code class="sig-name descname">github_hook</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app_webhook/views_github.html#github_hook"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#app_webhook.views_github.github_hook" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="app_webhook.views_github.list_githublog">
+<code class="sig-prename descclassname">app_webhook.views_github.</code><code class="sig-name descname">list_githublog</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">count=5</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app_webhook/views_github.html#list_githublog"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#app_webhook.views_github.list_githublog" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-app_webhook.views_hhxx">
+<span id="app-webhook-views-hhxx-module"></span><h2>app_webhook.views_hhxx module<a class="headerlink" href="#module-app_webhook.views_hhxx" title="永久链接至标题">¶</a></h2>
+<p>接受从hhxx.me发出的webhook</p>
+<dl class="function">
+<dt id="app_webhook.views_hhxx.hhxx_hook">
+<code class="sig-prename descclassname">app_webhook.views_hhxx.</code><code class="sig-name descname">hhxx_hook</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app_webhook/views_hhxx.html#hhxx_hook"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#app_webhook.views_hhxx.hhxx_hook" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-app_webhook">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-app_webhook" title="永久链接至标题">¶</a></h2>
+<p>一个用于接受webhook的app
+hook.py 定义了每个不同的webhook
+views_xxx.py处理实际的请求，例：</p>
+<blockquote>
+<div><p>views_github.py仅处理来自github的webhook
+views_hhxx.py仅处理来自hhxx.com的webhook</p>
+</div></blockquote>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="app_webhook.migrations.html" class="btn btn-neutral float-right" title="app_webhook.migrations package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="modules.html" class="btn btn-neutral float-left" title="fei_webhook" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Fei
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
