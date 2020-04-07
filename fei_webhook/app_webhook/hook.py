@@ -1,4 +1,5 @@
 """一个webhook的执行"""
+from share.env_conf import WebhookConfig
 from .models import WebhookLog
 import subprocess
 import json
@@ -77,7 +78,7 @@ class WebHook(ABC):
             return output
         except:
             print(f'script run error ---> {self.shell_script}')
-            
+
 
 class GithubHook(WebHook):
 
@@ -111,9 +112,17 @@ class GithubHook(WebHook):
         return False
 
 class HhxxGitHook(WebHook):
+    """用于接受本地git server 在post-receive发过来的请求
+    curl -H "Content-Type:application/json" -X POST -d '{"sec_code":""}' <http://site/...>
+    """
     def set_fields(self):
-        pass
+        self.webhooklog.from_site = "hhxx git server"
+        self.webhooklog.after = self.data_dict.get("after", '')
 
     def _if_valid_source(self):
+        my_code = str(self.data_dict.get('sec_code'))
+        if my_code == self.sec_code:
+            return True
 
-        pass
+        return False
+        

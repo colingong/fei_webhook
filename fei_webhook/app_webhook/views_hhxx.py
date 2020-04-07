@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, HttpResponse
 import json
 from share.env_conf import WebhookConfig
+from .hook import HhxxGitHook
 
 @csrf_exempt
 def hhxx_hook(request):
@@ -12,13 +13,9 @@ def hhxx_hook(request):
         for k, v in request.GET.items():
             print(f'{k} ---> {v}')
     elif request.method == 'POST':
-        print(f'POST: request.path ===>{request.path}')
-        data = json.loads(request.body)
-        for k, v in data.items():
-            print(f'{k} ---> {v}')
-        if data.get('sec') == WebhookConfig.hhxx_sec_code:
-            print('GOOD')
-        else:
-            print('wrong pass ===')
-    
-    return HttpResponse('no')
+        log = HhxxGitHook(request, sec_code=WebhookConfig.hhxx_sec_code)
+        log.shell_script = WebhookConfig.hhxx_hook_script
+        log.save_log()
+        return HttpResponse('ok')
+
+    return HttpResponse('nonono')
