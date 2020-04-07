@@ -218,7 +218,8 @@ def func2():
     print(a.encode('utf-8'))
     print(b'123456')
     b = 123456
-    print(str(b).encode('utf-8'))
+    bb = str(b).encode('utf-8')
+    print(f'bytes ---> {bb}')
 
 if __name__ == '__main__':
     # func1()

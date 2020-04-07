@@ -23,7 +23,7 @@ def github_hook(request):
         # 注意github配置时，选择的是form还是json
 
         # 如果是json
-        log = GithubHook(request, sec_code=WebhookConfig.github_sec_code)
+        log = GithubHook(request, sec_code=str(WebhookConfig.github_sec_code))
         
         filename = 'demo_script.sh'
         dirname = pathlib.Path(BASE_DIR).parent
