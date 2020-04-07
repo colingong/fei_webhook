@@ -107,6 +107,7 @@ class GithubHook(WebHook):
         sign = hashed.hexdigest()
         print(f'github sign: {sign_from_github} / local check sign: {sign}')
         
+        # 给测试用的sec_code，从环境变量获取
         test_sign = str(self.data_dict.get('sec_code', ''))
 
         if sign_from_github == sign or test_sign == self.sec_code:
