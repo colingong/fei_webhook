@@ -202,9 +202,7 @@ import json
 # payload = json.dumps(github_data).encode('utf-8')
 # payload = json.dumps(github_data)
 
-with open('json1', 'r') as f:
-    payload = json.load(f)
-    print(payload)
+payload = github_data
 
 def func1():
     key = b'123456'
@@ -213,5 +211,16 @@ def func1():
     sign = hmac.new(key, raw, hashlib.sha1).hexdigest()
     print(sign, github_sign)
 
+def func2():
+    import os
+
+    a = "123456"
+    print(a.encode('utf-8'))
+    print(b'123456')
+    b = 123456
+    print(str(b).encode('utf-8'))
+
 if __name__ == '__main__':
-    func1()
+    # func1()
+    func2()
+
