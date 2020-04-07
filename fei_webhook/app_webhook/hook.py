@@ -104,7 +104,7 @@ class GithubHook(WebHook):
         key = self.sec_code.encode('utf-8')
         hashed = hmac.new(key, raw, hashlib.sha1)
         sign = hashed.hexdigest()
-        
+        print(f'github sign: {sign_from_github} / local check sign: {sign}')
         test_sign = str(self.data_dict.get('sec_code', ''))
         print(f'---> _if_valid_source, {self.sec_code} {test_sign}')
 
