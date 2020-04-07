@@ -203,13 +203,13 @@ import json
 # payload = json.dumps(github_data)
 
 data_dict = json.loads(github_data)
-payload = json.dumps(data_dict).encode('utf-8')
+
+payload = json.dumps(github_data, separators=(',', ':')).encode('utf-8')
 print(payload)
 
 def func1():
     key = '123456'.encode('utf-8')
     raw = payload
-    # print(raw)
     sign = hmac.new(key, raw, hashlib.sha1).hexdigest()
     print(sign, github_sign)
 
