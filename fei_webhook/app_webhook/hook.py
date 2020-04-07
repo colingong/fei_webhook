@@ -100,6 +100,7 @@ class GithubHook(WebHook):
     def _if_valid_source(self):
         sign_from_github = self.request.headers.get('X-Hub-Signature')
         raw = self.request.body
+        print(f'self.sec_code ---> {self.sec_code}')
         key = self.sec_code.encode('utf-8')
         hashed = hmac.new(key, raw, hashlib.sha1)
         sign = hashed.hexdigest()
