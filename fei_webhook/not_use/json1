@@ -1,6 +1,4 @@
-import hashlib, hmac
-
-github_data = '''{
+{
   "ref": "refs/heads/master",
   "before": "458f00c5d4f50861a560a82540f5c74ab46eb1f1",
   "after": "0109cf998c3acc18e400e0be1e69610eff2bd233",
@@ -193,25 +191,4 @@ github_data = '''{
 
     ]
   }
-}'''
-
-github_sign = "X-Hub-Signature: sha1=513173448fbb22285a26e73ae6ba9285212bb400"
-
-import json
-
-# payload = json.dumps(github_data).encode('utf-8')
-# payload = json.dumps(github_data)
-
-with open('json1', 'r') as f:
-    payload = json.load(f)
-    print(payload)
-
-def func1():
-    key = b'123456'
-    raw = json.dumps(payload).encode('utf-8')
-    # print(raw)
-    sign = hmac.new(key, raw, hashlib.sha1).hexdigest()
-    print(sign, github_sign)
-
-if __name__ == '__main__':
-    func1()
+}
