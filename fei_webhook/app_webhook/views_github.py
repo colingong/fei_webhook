@@ -33,7 +33,6 @@ def github_hook(request):
 
         log.save_log()
         print(f'verified ---> {log.verified}')
-        
         # dummy commit
         
         # TODO: 如果是form
