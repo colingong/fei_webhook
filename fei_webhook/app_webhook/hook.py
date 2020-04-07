@@ -64,6 +64,7 @@ class WebHook(ABC):
         return webhooklog
 
     def save_log(self):
+        print(f'verified ===> {self.verified}')
         if self.verified:
             self.set_fields()
             output = self._run_shell_script()
