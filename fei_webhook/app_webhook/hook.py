@@ -60,7 +60,9 @@ class WebHook(ABC):
         raise Exception('需要给webhooklog的字段赋值')
 
     def convert_data_to_dict(self):
-        """处理get或post请求，获取有用的数据"""
+        """处理get或post请求，获取有用的数据
+           TODO: 要考虑各种异常
+        """
         if self.request.method == 'GET':
             data = dict(self.request.GET)
             return data
@@ -137,6 +139,7 @@ class HhxxGitHook(WebHook):
     """
     def set_fields(self):
         self.webhooklog.from_site = "hhxx git server"
+        print(self.data_dict)
         print(self.data_dict.get("after"))
         self.webhooklog.after = self.data_dict.get("after", '')
 
