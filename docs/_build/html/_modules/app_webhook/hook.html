@@ -208,15 +208,22 @@
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;需要给webhooklog的字段赋值&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="WebHook.convert_data_to_dict"><a class="viewcode-back" href="../../api/app_webhook.html#app_webhook.hook.WebHook.convert_data_to_dict">[文档]</a>    <span class="k">def</span> <span class="nf">convert_data_to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;处理get或post请求，获取有用的数据&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;处理get或post请求，获取有用的数据</span>
+<span class="sd">           TODO: 要考虑各种异常</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;GET&#39;</span><span class="p">:</span>
             <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">data</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">data</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;从request.body转data_dict错误---&gt; </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span>
-        <span class="k">return</span> <span class="n">data</span></div>
-    
+            <span class="k">pass</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
 <div class="viewcode-block" id="WebHook.gen_webhooklog"><a class="viewcode-back" href="../../api/app_webhook.html#app_webhook.hook.WebHook.gen_webhooklog">[文档]</a>    <span class="k">def</span> <span class="nf">gen_webhooklog</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;获取日志各字段的值&quot;&quot;&quot;</span>
 
@@ -280,11 +287,13 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="HhxxGitHook.set_fields"><a class="viewcode-back" href="../../api/app_webhook.html#app_webhook.hook.HhxxGitHook.set_fields">[文档]</a>    <span class="k">def</span> <span class="nf">set_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">webhooklog</span><span class="o">.</span><span class="n">from_site</span> <span class="o">=</span> <span class="s2">&quot;hhxx git server&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_dict</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;after&quot;</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">webhooklog</span><span class="o">.</span><span class="n">after</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;after&quot;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_if_valid_source</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">my_code</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;sec_code&#39;</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">my_code</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">sec_code</span><span class="p">:</span>
+        <span class="n">received_code</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;sec_code&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">received_code</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">sec_code</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">True</span>
 
         <span class="k">return</span> <span class="kc">False</span></div>
