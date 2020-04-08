@@ -73,7 +73,7 @@ class WebHook(ABC):
         else:
             pass
         return None
-        
+
     def gen_webhooklog(self):
         """获取日志各字段的值"""
 
@@ -136,12 +136,13 @@ class HhxxGitHook(WebHook):
     curl -H "Content-Type:application/json" -X POST -d '{"sec_code":""}' <http://site/...>
     """
     def set_fields(self):
+        print(self.data_dict)
         self.webhooklog.from_site = "hhxx git server"
         print(self.data_dict.get("after"))
         self.webhooklog.after = self.data_dict.get("after", '')
 
     def _if_valid_source(self):
-        my_code = str(self.data_dict.get('sec_code'))
+        my_code = str(self.data_dict.get('sec_code', ''))
         if my_code == self.sec_code:
             return True
 
