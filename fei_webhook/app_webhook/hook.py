@@ -61,17 +61,19 @@ class WebHook(ABC):
 
     def convert_data_to_dict(self):
         """处理get或post请求，获取有用的数据"""
-        try:
-            if self.request.method == 'GET':
-                data = dict(self.request.GET)
-            elif self.request.method == 'POST':
-                data = json.loads(self.request.body)
-            else:
-                return None
+        if self.request.method == 'GET':
+            data = dict(self.request.GET)
             return data
-        except:
-            return {"no_key": "no_value"}
-    
+        elif self.request.method == 'POST':
+            try:
+                data = json.loads(self.request.body)
+                return data
+            except:
+                pass
+        else:
+            pass
+        return None
+        
     def gen_webhooklog(self):
         """获取日志各字段的值"""
 
