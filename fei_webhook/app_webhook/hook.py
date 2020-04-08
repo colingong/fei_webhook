@@ -103,7 +103,7 @@ class WebHook(ABC):
 class GithubHook(WebHook):
 
     def set_fields(self):
-        self.webhooklog.from_site = 'Github.com'
+        self.webhooklog.from_site = 'Webhook Project - Github.com'
 
         self.webhooklog.ref = self.data_dict.get("ref", '')
         self.webhooklog.before = self.data_dict.get("before", '')
@@ -138,7 +138,7 @@ class HhxxGitHook(WebHook):
     curl -H "Content-Type:application/json" -X POST -d '{"sec_code":""}' <http://site/...>
     """
     def set_fields(self):
-        self.webhooklog.from_site = "hhxx git server"
+        self.webhooklog.from_site = "hhxx - local git server"
         print(self.data_dict)
         print(self.data_dict.get("after"))
         self.webhooklog.after = self.data_dict.get("after", '')
@@ -150,3 +150,35 @@ class HhxxGitHook(WebHook):
 
         return False
         
+class GithubHookFeiProject(WebHook):
+
+    def set_fields(self):
+        self.webhooklog.from_site = 'Fei Project - Github.com'
+
+        self.webhooklog.ref = self.data_dict.get("ref", '')
+        self.webhooklog.before = self.data_dict.get("before", '')
+        self.webhooklog.after = self.data_dict.get("after", '')
+        repository = self.data_dict.get("repository", self._empty_dict)
+        head_commit = self.data_dict.get("head_commit", self._empty_dict)
+        self.webhooklog.repo_name = repository.get("full_name", '')
+        self.webhooklog.html_url = repository.get("html_url", '')
+        self.webhooklog.hooks_url = repository.get("hooks_url", '')
+        self.webhooklog.commit_message = head_commit.get("message", '')
+        print(f'---> set_fields done')
+
+    def _if_valid_source(self):
+        sign_from_github = self.request.headers.get('X-Hub-Signature').split('=')[1]
+        raw = self.request.body
+        key = self.sec_code.encode('utf-8')
+
+        hashed = hmac.new(key, raw, hashlib.sha1)
+        sign = hashed.hexdigest()
+        print(f'github sign: {sign_from_github} / local check sign: {sign}')
+        
+        # 给测试用的sec_code，从环境变量获取
+        test_sign = str(self.data_dict.get('sec_code', ''))
+
+        if sign_from_github == sign or test_sign == self.sec_code:
+            return True
+        
+        return False

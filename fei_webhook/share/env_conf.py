@@ -24,3 +24,5 @@ class WebhookConfig:
     hhxx_hook_script = os.environ.get('hhxx_hook_script')
     hhxx_sec_code = str(os.environ.get('hhxx_sec_code'))
 
+    github_hook_script_fei = os.environ.get('github_hook_script_fei')
+    github_sec_code_fei = os.environ.get('github_sec_code_fei')
