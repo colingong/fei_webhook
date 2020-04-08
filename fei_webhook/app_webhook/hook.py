@@ -68,8 +68,8 @@ class WebHook(ABC):
             try:
                 data = json.loads(self.request.body)
                 return data
-            except:
-                pass
+            except Exception as e:
+                print(f"从request.body转data_dict错误---> {e}")
         else:
             pass
         return None
@@ -141,8 +141,8 @@ class HhxxGitHook(WebHook):
         self.webhooklog.after = self.data_dict.get("after", '')
 
     def _if_valid_source(self):
-        my_code = str(self.data_dict.get('sec_code', ''))
-        if my_code == self.sec_code:
+        received_code = str(self.data_dict.get('sec_code', ''))
+        if received_code == self.sec_code:
             return True
 
         return False
