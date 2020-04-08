@@ -7,10 +7,6 @@ from django.shortcuts import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from .hook import GithubHookFeiProject
 from share.env_conf import WebhookConfig
-# @csrf_exempt
-# def fei_project(request):
-#     print(request.body)
-#     return HttpResponse('success')
 
 @csrf_exempt
 def fei_project(request):
@@ -20,14 +16,12 @@ def fei_project(request):
         # 如果是json
         log = GithubHookFeiProject(request, sec_code=str(WebhookConfig.github_sec_code_fei))
         
-        # filename = 'demo_script.sh'
-        # dirname = pathlib.Path(BASE_DIR).parent
-        # log.shell_script = os.path.join(dirname, filename)
         log.shell_script = WebhookConfig.github_hook_script_fei
-        # print(f'script file ---> {log.shell_script}')
+        print(f'script file ---> {log.shell_script}')
 
         log.save_log()
         print(f'verified ---> {log.verified}')
+        print('===> 0409')
         # dummy commit
         
         # TODO: 如果是form
