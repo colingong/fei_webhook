@@ -136,7 +136,6 @@ class HhxxGitHook(WebHook):
     curl -H "Content-Type:application/json" -X POST -d '{"sec_code":""}' <http://site/...>
     """
     def set_fields(self):
-        print(self.data_dict)
         self.webhooklog.from_site = "hhxx git server"
         print(self.data_dict.get("after"))
         self.webhooklog.after = self.data_dict.get("after", '')

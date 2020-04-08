@@ -13,6 +13,8 @@ def hhxx_hook(request):
         for k, v in request.GET.items():
             print(f'{k} ---> {v}')
     elif request.method == 'POST':
+        print(request.POST)
+        print(request.body)
         log = HhxxGitHook(request, sec_code=WebhookConfig.hhxx_sec_code)
         log.shell_script = WebhookConfig.hhxx_hook_script
         log.save_log()
