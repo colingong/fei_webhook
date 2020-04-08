@@ -140,8 +140,8 @@ class HhxxGitHook(WebHook):
     def set_fields(self):
         self.webhooklog.from_site = "hhxx - local git server"
         print(self.data_dict)
-        print(self.data_dict.get("after"))
-        self.webhooklog.after = self.data_dict.get("after", '')
+        print(self.data_dict.get("extra_info"))
+        self.webhooklog.extra_info = self.data_dict.get("extra_info", '')
 
     def _if_valid_source(self):
         received_code = str(self.data_dict.get('sec_code', ''))
