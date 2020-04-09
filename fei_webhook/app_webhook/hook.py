@@ -135,13 +135,13 @@ class GithubHook(WebHook):
 
 class HhxxGitHook(WebHook):
     """用于接受本地git server 在post-receive发过来的请求
-    curl -H "Content-Type:application/json" -X POST -d '{"sec_code":""}' <http://site/...>
+    :curl -H "Content-Type:application/json" -X POST -d '{"sec_code":""}' <http://site/...>
 
     post-receive hook script:
-    用git log分别取出当前的head和上一次的head，再取出当前的commt message，转成json发出去
-    #!/bin/sh
-    # for post commit
-    # exec git update-server-info
+    :用git log分别取出当前的head和上一次的head，再取出当前的commt message，转成json发出去
+    :#!/bin/sh
+    :# for post commit
+    :# exec git update-server-info
 
     AFTER=$(git log --pretty=%h |head -1)
     BEFORE=$(git log --pretty=%h |head -2|tail -1)
