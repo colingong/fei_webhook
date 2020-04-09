@@ -146,7 +146,7 @@ class HhxxGitHook(WebHook):
     AFTER=$(git log --pretty=%h |head -1)
     BEFORE=$(git log --pretty=%h |head -2|tail -1)
     COMMIT_MESSAGE=$(git log --pretty=%s |head -1)
-    tmp='{"sec_code":"123456","after":'\"$AFTER\"',"before":'\"$BEFORE\"',"commit_message":'\"$COMMIT_MESSAGE\"'}'
+    tmp='{"sec_code":"xxxxxx","after":'\"$AFTER\"',"before":'\"$BEFORE\"',"commit_message":'\"$COMMIT_MESSAGE\"'}'
     echo $tmp | curl -i -H "Content-Type:application/json" -X POST  -d @- webhook.hhxx.me/webhook/hhxx/
     """
     def set_fields(self):
