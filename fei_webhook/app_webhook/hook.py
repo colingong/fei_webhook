@@ -138,7 +138,16 @@ class HhxxGitHook(WebHook):
     curl -H "Content-Type:application/json" -X POST -d '{"sec_code":""}' <http://site/...>
 
     post-receive hook script:
-    
+    用git log分别取出当前的head和上一次的head，再取出当前的commt message，转成json发出去
+    #!/bin/sh
+    # for post commit
+    # exec git update-server-info
+
+    AFTER=$(git log --pretty=%h |head -1)
+    BEFORE=$(git log --pretty=%h |head -2|tail -1)
+    COMMIT_MESSAGE=$(git log --pretty=%s |head -1)
+    tmp='{"sec_code":"123456","after":'\"$AFTER\"',"before":'\"$BEFORE\"',"commit_message":'\"$COMMIT_MESSAGE\"'}'
+    echo $tmp | curl -i -H "Content-Type:application/json" -X POST  -d @- webhook.hhxx.me/webhook/hhxx/
     """
     def set_fields(self):
         self.webhooklog.from_site = "hhxx - local git server"
