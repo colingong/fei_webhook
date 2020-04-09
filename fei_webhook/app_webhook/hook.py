@@ -136,12 +136,16 @@ class GithubHook(WebHook):
 class HhxxGitHook(WebHook):
     """用于接受本地git server 在post-receive发过来的请求
     curl -H "Content-Type:application/json" -X POST -d '{"sec_code":""}' <http://site/...>
+
+    post-receive hook script:
+    
     """
     def set_fields(self):
         self.webhooklog.from_site = "hhxx - local git server"
         # 
         self.webhooklog.before = self.data_dict.get("before", '')
         self.webhooklog.after = self.data_dict.get("after", '')
+        self.webhooklog.commit_message = self.data_dict.get("commit_message", '')
         # self.webhooklog.commit_message = head_commit.get("message", '')
         # self.webhooklog.ref = self.data_dict.get("ref", '')
         # repository = self.data_dict.get("repository", self._empty_dict)
