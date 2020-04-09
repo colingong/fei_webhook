@@ -143,7 +143,7 @@ class HhxxGitHook(WebHook):
     | #!/bin/sh
     | # for post commit
     | # exec git update-server-info
-| 
+    | 
     | AFTER=$(git log --pretty=%h |head -1)
     | BEFORE=$(git log --pretty=%h |head -2|tail -1)
     | COMMIT_MESSAGE=$(git log --pretty=%s |head -1)
