@@ -83,6 +83,14 @@ app\_webhook.views\_github module
    :undoc-members:
    :show-inheritance:
 
+app\_webhook.views\_github\_fei module
+--------------------------------------
+
+.. automodule:: app_webhook.views_github_fei
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 app\_webhook.views\_hhxx module
 -------------------------------
 
